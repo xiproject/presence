@@ -71,7 +71,7 @@ presence.stderr.on('data', function(data) {
 });
 
 presence.on('close', function(code, signal) {
-    xal.log.info('presence.py closed');
+    xal.log.fatal('presence.py closed');
 });
 
 xal.start({name: 'Presence'});

@@ -4,6 +4,7 @@ import cv2
 import time
 import numpy
 import sys
+import audio
 
 webcam = cv2.VideoCapture(0)
 
@@ -14,6 +15,8 @@ lower_body_cascade = cv2.CascadeClassifier('haarcascade_lowerbody.xml')
 full_body_cascade = cv2.CascadeClassifier('haarcascade_fullbody.xml')
 
 result, last_frame, last_frame2 = numpy.array([]), numpy.array([]), numpy.array([])
+
+tt = audio.TapTester()
 
 while(True):
     ret, frame = webcam.read()
@@ -60,14 +63,13 @@ while(True):
         d1 = cv2.absdiff(last_frame, gray)
         d2 = cv2.absdiff(last_frame2, gray)
         result = cv2.bitwise_and(d1, d2)
-        ret, result = cv2.threshold(result, 50, 255, cv2.THRESH_BINARY)
-        kernel_ones = numpy.ones((3,3), numpy.uint8)
+        ret, result = cv2.threshold(result, 20, 255, cv2.THRESH_BINARY)
+        kernel_ones = numpy.ones((2,2), numpy.uint8)
         eroded = cv2.erode(result, kernel_ones, iterations=1)
         dilated = cv2.dilate(eroded, kernel_ones, iterations=1)
 
         changed_pixels = cv2.countNonZero(dilated)
-        changed_pixels_frac = float(changed_pixels) / float(result.size)
-        if changed_pixels_frac > 0.005:
+        if changed_pixels > 0:
             print 'Presence detected: motion detection'
             sys.stdout.flush()
 
@@ -79,4 +81,5 @@ while(True):
     last_frame = last_frame2;
     last_frame2 = gray;
 
-    time.sleep(0.6)
+    for i in range(10):
+        tt.listen()
