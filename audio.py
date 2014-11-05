@@ -105,19 +105,12 @@ class TapTester(object):
             # noisy block
             self.quietcount = 0
             self.noisycount += 1
-            if self.noisycount > OVERSENSITIVE:
-                # turn down the sensitivity
-                self.tap_threshold *= 1.1
         else:
             # quiet block.
-
             if 1 <= self.noisycount <= MAX_TAP_BLOCKS:
                 self.tapDetected()
             self.noisycount = 0
             self.quietcount += 1
-            if self.quietcount > UNDERSENSITIVE:
-                # turn up the sensitivity
-                self.tap_threshold *= 0.9
 
 if __name__ == "__main__":
     tt = TapTester()
